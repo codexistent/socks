@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Socks
 
-## Getting Started
+Socks is a s(t)ock market application, without the T (as in ``T``aste of a bad UI?).
 
-First, run the development server:
+## Building Socks
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This app was initially built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. Several tools and languages were used in its development, including the programming languages:
+- Typescript
+- Next.JS
+- React
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+and the tools:
+- **TradingView**, for its industry-standard stock market widgets
+- **ShadCN**, a beautiful components library
+- **CodeRabbit**, an AI pull request reviewing tool 
 
-You can start editing the page by modifying `app/(root)/page.tsx`. The page auto-updates as you edit the file.
+There were several major parts to Socks' development, as described below.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Part 1: Layout and Header Setup
 
-## Learn More
+To cleanly develop Socks' layout so it was reusable and scalable, we incorporated the following during the development of Socks' primary layout and headers setup:
+- React's App Router feature, for simpler and scalable page URLs
+- A separate `constants.ts` file to detach some style or settings variables for our application from the interface code itself (in considering the 'separation of concerns' principle)
 
-To learn more about Next.js, take a look at the following resources:
+### Part 2: Homepage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Our homepage includes four TradingView stock market widgets. 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The widgets themselves are stored under the `@/components` directory and loaded in through `useTradingViewWidget` (implemeted in file `useTradingViewWidget.tsx`), a React hook for loading embedded `TradingViewWidgets` into application.
 
-## Deploy on Vercel
+Note here that all the components for our website are added under the `@/components` directory first, and then loaded into the specific pages they are used, in order to maximize reusability and reduce repetition.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![readme/homepage.png](readme/homepage.png)
