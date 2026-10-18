@@ -16,6 +16,13 @@ and the tools:
 
 There were several major parts to Socks' development, as described below.
 
+### Part 0: The Logo
+It was initially difficult to envision Socks' logo, until the realization that it could simply be two Socks placed stylishly, one upon the other.
+
+For this, Pixlr was used. The result is below:
+
+![readme/Logo.png](readme/Logo.png)
+
 ### Part 1: Layout and Header Setup
 
 To cleanly develop Socks' layout so it was reusable and scalable, we incorporated the following during the development of Socks' primary layout and headers setup:
