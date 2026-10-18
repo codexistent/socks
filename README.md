@@ -1,6 +1,6 @@
 # Socks
 
-Socks is a s(t)ock market application, without the T (as in ``T``aste of a bad UI?).
+Socks is a s(t)ock market application, without the T (as in ``T``aste of a bad UI). We do have much market differentiation.
 
 ## Building Socks
 
