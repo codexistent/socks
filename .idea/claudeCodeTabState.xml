@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ClaudeCodeTabState">
+    <option name="tabSessions">
+      <map>
+        <entry key="0">
+          <value>
+            <TabSessionState>
+              <option name="projectPath" value="C:\Users\yuebi\WebstormProjects\socks" />
+              <option name="provider" value="claude" />
+              <option name="sessionId" value="53acc4ff-d9c9-48bb-9db7-444646d6a708" />
+              <option name="cwd" value="C:\Users\yuebi\WebstormProjects\socks" />
+              <option name="model" value="claude-sonnet-5[1m]" />
+              <option name="permissionMode" value="default" />
+            </TabSessionState>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
