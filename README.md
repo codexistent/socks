@@ -38,3 +38,11 @@ The widgets themselves are stored under the `@/components` directory and loaded 
 Note here that all the components for our website are added under the `@/components` directory first, and then loaded into the specific pages they are used, in order to maximize reusability and reduce repetition.
 
 ![readme/homepage.png](readme/homepage.png)
+
+### Part 3: Auth UI & Layout
+
+To begin with, while not being exclusive to this part in terms of its functionality, we created a globally accessible `types` directory and `global.d.ts` file for storing types which are usable across the entire project.
+
+For forms, we utilized the React hook-centered open-source library React Hook Form, a third party package which enables us to validate and manage the state of our forms.
+
+For our input fields, we created reusable `InputField.tsx`, `SelectField.tsx`, and `CountrySelectField.tsx` components under the `components` directory.
