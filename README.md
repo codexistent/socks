@@ -56,7 +56,7 @@ The resulting forms appeared like the below:
 
 ### Part 4: The Database
 
-This app uses the cloud-based MongoDB Atlas, communicating with the database via the ORM Mongoose.
+This app uses the cloud-based MongoDB Atlas, communicating with the database via the ORM Mongoose. Crucially, in `mongoose.ts`, we implemented a new singleton-style Mongoose connector with a global cache which exports `connectToDatabase`.
 
 To test the server connection, we created the new script `test:db`. This succeeded, as apparent by the console log below:
 
