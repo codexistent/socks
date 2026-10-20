@@ -58,6 +58,6 @@ The resulting forms appeared like the below:
 
 This app uses the cloud-based MongoDB Atlas, communicating with the database via the ORM Mongoose. Crucially, in `mongoose.ts`, we implemented a new singleton-style Mongoose connector with a global cache which exports `connectToDatabase`.
 
-To test the server connection, we created the new script `test:db`. This succeeded, as apparent by the console log below:
+To validate, we used CLI testing by creating the new script `test:db`. This succeeded, as apparent by the console log below:
 
 ![readme/testdb.png](readme/testdb.png)
