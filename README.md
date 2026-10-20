@@ -14,6 +14,8 @@ and the tools:
 - **ShadCN**, a beautiful components library
 - **CodeRabbit**, an AI pull request reviewing tool 
 
+Regarding AI usage: while Junie, an AI coding tool, was utilized throughout the video, Socks was developed without using it. Claude Code was used minimally for debugging purposes.
+
 There were several major parts to Socks' development, as described below.
 
 ### Part 0: The Logo
@@ -51,3 +53,11 @@ The resulting forms appeared like the below:
 
 ![readme/signup.png](readme/signup.png)
 ![readme/signin.png](readme/signin.png)
+
+### Part 4: The Database
+
+This app uses the cloud-based MongoDB Atlas, communicating with the database via the ORM Mongoose.
+
+To test the server connection, we created the new script `test:db`. This succeeded, as apparent by the console log below:
+
+![readme/testdb.png](readme/testdb.png)
