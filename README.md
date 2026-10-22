@@ -72,6 +72,9 @@ To validate, we used CLI testing by creating the new script `test:db`. This succ
 In this part, we integrated the following tools:
 - BetterAuth for user authentication
 - Inngest + Nodemailer to asynchronously send users emails.
+- MongoDB Atlas for our database, to store user information
+
+The result was completed functionality for user sign up and sign in, wih the added perk of user email communication amongst important events (such as successful user sign up).
 
 #### Bugs/Issues
 One issue we ran into was as in `auth.ts`, where when creating the singleton `authInstance`, there were incompatible types between what was being passed as props when initializing it to a new `betterAuth` object versus what `betterAuth` expected. Initially, `authInstance` was initialized in the following way:
