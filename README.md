@@ -9,10 +9,15 @@ This app was initially built following this tutorial: https://www.youtube.com/wa
 - Next.JS
 - React
 
-and the tools:
+as well as:
 - **TradingView**, for its industry-standard stock market widgets
 - **ShadCN**, a beautiful components library
 - **CodeRabbit**, an AI pull request reviewing tool 
+- **MongoDB Atlas**, the cloud-based database
+- **Better Auth** for authentication logic
+- **Inngest** for streamlining async code
+- **Nodemail** for the app's email communications
+- **Google AI Studio** to personalize content for users
 
 Regarding AI usage: while Junie, an AI coding tool, was utilized throughout the video, Socks was developed without using it. Claude Code was used minimally for debugging purposes.
 
@@ -61,3 +66,52 @@ This app uses the cloud-based MongoDB Atlas, communicating with the database via
 To validate, we used CLI testing by creating the new script `test:db`. This succeeded, as apparent by the console log below:
 
 ![readme/testdb.png](readme/testdb.png)
+
+### Part 5: Authentication Logic
+
+In this part, we integrated the following tools:
+- BetterAuth for user authentication
+- Inngest + Nodemailer to asynchronously send users emails.
+- MongoDB Atlas for our database, to store user information
+
+The result was completed functionality for user sign up and sign in, wih the added perk of user email communication amongst important events (such as successful user sign up).
+
+#### Bugs/Issues
+One issue we ran into was as in `auth.ts`, where when creating the singleton `authInstance`, there were incompatible types between what was being passed as props when initializing it to a new `betterAuth` object versus what `betterAuth` expected. Initially, `authInstance` was initialized in the following way:
+```typescript
+let authInstance: ReturnType<typeof betterAuth> | null = null;
+```
+```typescript
+authInstance = betterAuth({
+    database: mongodbAdapter(db),
+    secret: process.env.BETTER_AUTH_SECRET,
+    baseURL: process.env.BETTER_AUTH_URL,
+    emailAndPassword: {
+    enabled: true,
+    disableSignUp: false,
+    requireEmailVerification: false,
+    minPasswordLength: 8,
+    maxPasswordLength: 128,
+    autoSignIn: true,
+    },
+    plugins: [nextCookies()],
+});
+```
+The issue was at its root due to BetterAuth being of newer version than what we'd presumably coded with. We resolved it by instead instantiating authInstance through a new `createAuth` function so TypeScript could infer the exact return type:
+```typescript
+const createAuth = (db: Db) =>
+    betterAuth({
+        database: mongodbAdapter(db),
+        secret: process.env.BETTER_AUTH_SECRET,
+        baseURL: process.env.BETTER_AUTH_URL,
+        emailAndPassword: {
+            enabled: true,
+            disableSignUp: false,
+            requireEmailVerification: false,
+            minPasswordLength: 8,
+            maxPasswordLength: 128,
+            autoSignIn: true,
+        },
+        plugins: [nextCookies()],
+    });
+```
