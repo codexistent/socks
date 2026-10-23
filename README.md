@@ -115,3 +115,14 @@ const createAuth = (db: Db) =>
         plugins: [nextCookies()],
     });
 ```
+
+### Part 6: Daily News Summary
+
+We implemented the following four-step workflow to enable email-based communication of daily news summaries for users:
+1. Schedule async workflow with Inngest, retrieving all users who are on mailing list
+2. For each user, customize email based on their watch list symbols
+3. Personalize digest further via Gemini AI
+4. Send out emails via NodeMailer
+
+The result is a customized daily news summary sent out to all users, which looks something like the below:
+![readme/NewsEmail.png](redme/NewsEmail.png)
