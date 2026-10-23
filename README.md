@@ -131,3 +131,7 @@ The result is a customized daily news summary sent out to all users, which looks
 ### Part 7: Search Functionality
 
 To enable users to search for stocks, we used Finnhub's Stock API to pull data on tickers.
+
+### Part 8: Stock Details
+
+We added functionality enabling users to view a detailed information page for specific stocks. The implementation for this part actually came out quite similar compared to building our Watchlist tab, as we put together several TradingView widgets to build out our page. Due to our having set up the components => pages workflow in prior parts, adding in new TradingView widgets for our page was relatively straighforward.

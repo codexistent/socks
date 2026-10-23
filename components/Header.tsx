@@ -15,9 +15,7 @@ const Header = async ({ user } : { user: User }) => {
                     <Image src="/assets/icons/logo.svg" alt="Socks logo" width={140} height={32} className="h-8 w-auto cursor-pointer"/>
                 </Link>
                 <nav className="hidden sm:block">
-                    <NavItems>
-                        <NavItems initialStocks={initialStocks}/>
-                    </NavItems>
+                    <NavItems initialStocks={initialStocks}/>
                 </nav>
 
                 <UserDropdown user={user} initialStocks={initialStocks} />
