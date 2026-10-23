@@ -18,6 +18,7 @@ as well as:
 - **Inngest** for streamlining async code
 - **Nodemail** for the app's email communications
 - **Google AI Studio** to personalize content for users
+- **Finnhub API** for stock market data
 
 Regarding AI usage: while Junie, an AI coding tool, was utilized throughout the video, Socks was developed without using it. Claude Code was used minimally for debugging purposes.
 
@@ -126,3 +127,7 @@ We implemented the following four-step workflow to enable email-based communicat
 
 The result is a customized daily news summary sent out to all users, which looks something like the below:
 ![readme/NewsEmail.png](redme/NewsEmail.png)
+
+### Part 7: Search Functionality
+
+To enable users to search for stocks, we used Finnhub's Stock API to pull data on tickers.
