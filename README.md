@@ -126,7 +126,7 @@ We implemented the following four-step workflow to enable email-based communicat
 4. Send out emails via NodeMailer
 
 The result is a customized daily news summary sent out to all users, which looks something like the below:
-![readme/NewsEmail.png](redme/NewsEmail.png)
+![readme/NewsEmail.png](readme/NewsEmail.png)
 
 ### Part 7: Search Functionality
 
