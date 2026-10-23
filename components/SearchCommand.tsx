@@ -1,10 +1,10 @@
 'use client';
 
 import {useEffect, useState} from "react";
-import { Command, CommandDialog, CommandGroup, CommandItem, CommandEmpty, CommandInput, CommandList } from "@/components/ui/command"
+import { Command, CommandDialog, CommandEmpty, CommandInput, CommandList } from "@/components/ui/command"
 import {Button} from "@base-ui/react";
 import Link from "next/link";
-import {Loader2, Star, TrendingUp} from "lucide-react";
+import {Loader2, TrendingUp} from "lucide-react";
 import {searchStocks} from "@/lib/actions/finnhub.actions";
 import {useDebounce} from "@/hooks/useDebounce";
 
