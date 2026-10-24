@@ -10,6 +10,7 @@ import FooterLink from "@/components/forms/FooterLink";
 import {signUpWithEmail} from "@/lib/actions/auth.actions";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import GoogleButton from "@/components/forms/GoogleButton";
 
 const SignUp = () => {
     const router = useRouter()
@@ -47,6 +48,15 @@ const SignUp = () => {
         <>
             <h1 className="form-title">Sign Up & Personalize</h1>
 
+            <div className="space-y-5 mb-5">
+                <GoogleButton/>
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                    <div className="h-px flex-1 bg-gray-700"/>
+                    or
+                    <div className="h-px flex-1 bg-gray-700" />
+                </div>
+            </div>
+
             <form onSubmit={ handleSubmit(onSubmit) } className="space-y-5">
                 <InputField
                     name="fullName"
@@ -63,7 +73,7 @@ const SignUp = () => {
                     placeholder="socks@socks.socks"
                     register={register}
                     error={errors.email}
-                    validation={{required:'Email is required', pattern: /^\w+(\.\w+)*@\w+(\.\w+)+$/, message: 'Email is required'}}
+                    validation={ { required:'Email is required', pattern: { value: /^\w+(\.\w+)*@\w+(\.\w+)+$/, message: 'Email is required' } } }
                 />
 
                 <InputField

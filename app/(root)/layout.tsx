@@ -5,15 +5,19 @@ import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 
 const Layout = async ({ children }: { children : React.ReactNode }) => {
+    const h = await headers();
     const session = await auth.api.getSession({ headers: await headers() })
 
-    if(!session?.user) redirect('/sign-in');
+    if(!session?.user) redirect('/sign-in')
+    if(!session.user.country) redirect('/onboarding');
+
+    const accounts = await auth.api.listUserAccounts({ headers: h });
 
     const user = {
         id: session.user.id,
         name: session.user.name,
         email: session.user.email,
-
+        hasGoogle: accounts.some((a) => a.providerId === 'google'),
     }
 
     return (

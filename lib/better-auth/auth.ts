@@ -1,8 +1,11 @@
+import { sendWelcomeEvent } from "@/lib/inngest/events";
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { connectToDatabase } from "@/database/mongoose";
 import { nextCookies } from "better-auth/next-js";
 import type { Db } from 'mongodb';
+
+const profileField = { type: "string", required: false, input: true } as const;
 
 const createAuth = (db: Db) =>
     betterAuth({
@@ -17,6 +20,51 @@ const createAuth = (db: Db) =>
             maxPasswordLength: 128,
             autoSignIn: true,
         },
+        socialProviders: {
+            google: {
+                clientId: process.env.GOOGLE_CLIENT_ID as string,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+                prompt: "select_account",
+            },
+        },
+        account:{
+            accountLinking: {
+                enabled: true,
+                trustedProviders: ["google"],
+            },
+        },
+        user: {
+            additionalFields: {
+                country: profileField,
+                investmentGoals: profileField,
+                riskTolerance: profileField,
+                preferredIndustry: profileField,
+            },
+        },
+        databaseHooks: {
+            user: {
+                create: {
+                    after: async (user) => {
+                        const u = user as typeof user & Partial<OnboardingFormData>;
+                        if(!u.country || !u.investmentGoals || !u.riskTolerance || !u.preferredIndustry) return;
+
+                        try {
+                            await sendWelcomeEvent({
+                                email: u.email,
+                                name: u.name,
+                                country: u.country,
+                                investmentGoals: u.investmentGoals,
+                                riskTolerance: u.riskTolerance,
+                                preferredIndustry: u.preferredIndustry,
+                            });
+                        } catch (e) {
+                            console.error('Failed to queue welcome email', e);
+                        }
+                    },
+                },
+            },
+        },
+
         plugins: [nextCookies()],
     });
 
