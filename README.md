@@ -4,7 +4,9 @@ Socks is a s(t)ock market application, without the T (as in ``T``aste of a bad U
 
 ## Building Socks
 
-This app was initially built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. Several tools and languages were used in its development, including the programming languages:
+Parts 1-9 of the app (as described below) were built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. 
+
+Several tools and languages were used throughout development, including the programming languages:
 - Typescript
 - Next.JS
 - React
@@ -140,3 +142,7 @@ We added functionality enabling users to view a detailed information page for sp
 
 Vercel was used for deployment. The only minor issue we ran into here was a Next.js version vulnerability, which was fixed through the PR `Fix React Server Components CVE vulnerabilities` with auto-generated change suggestions from Vercel:
 ![readme/vercelerror.png](readme/vercelerror.png)
+
+### Part 10: Google Auth 
+
+Through Google Cloud, we enabled users to be able to authenticate, sign themselves up, or link existing accounts to Google.

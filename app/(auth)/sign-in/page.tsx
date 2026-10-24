@@ -7,9 +7,21 @@ import FooterLink from "@/components/forms/FooterLink";
 import {signInWithEmail, signUpWithEmail} from "@/lib/actions/auth.actions";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import GoogleButton from "@/components/forms/GoogleButton";
+import {useEffect} from "react";
 
 const SignIn = () => {
     const router = useRouter();
+
+    useEffect(() => {
+        const error = new URLSearchParams(window.location.search).get('error');
+        if(error === 'account_not_linked'){
+            toast.error('This email already has an account', {
+                description: 'Sign in with your password, then link Google from your account menu.',
+                duration: 10000,
+            });
+        }
+    }, []);
 
     const{
         register,
@@ -39,6 +51,15 @@ const SignIn = () => {
         <>
             <h1 className="form-title">Welcome Back</h1>
 
+            <div className="space-y-5 mb-5">
+                <GoogleButton/>
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                    <div className="h-px flex-1 bg-gray-700"/>
+                    or
+                    <div className="h-px flex-1 bg-gray-700"/>
+                </div>
+            </div>
+
             <form onSubmit={ handleSubmit(onSubmit) } className="space-y-5">
                 <InputField
                     name="email"
@@ -46,7 +67,7 @@ const SignIn = () => {
                     placeholder="socks@socks.socks"
                     register={register}
                     error={errors.email}
-                    validation={{required:'Email is required', pattern: /^\w+(\.\w+)*@\w+(\.\w+)+$/, message: 'Email is required'}}
+                    validation={{required:'Email is required', pattern: { value: /^\w+(\.\w+)*@\w+(\.\w+)+$/, message: 'Enter a valid email address'} } }
                 />
 
                 <InputField

@@ -73,6 +73,7 @@ declare global {
         id: string;
         name: string;
         email: string;
+        hasGoogle?: boolean;
     };
 
     type UserForNewsEmail = {

@@ -33,6 +33,14 @@ const createAuth = (db: Db) =>
                 trustedProviders: ["google"],
             },
         },
+        user: {
+            additionalFields: {
+                country: profileField,
+                investmentGoals: profileField,
+                riskTolerance: profileField,
+                preferredIndustry: profileField,
+            },
+        },
         databaseHooks: {
             user: {
                 create: {
