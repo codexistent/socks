@@ -130,6 +130,8 @@ We implemented the following four-step workflow to enable email-based communicat
 The result is a customized daily news summary sent out to all users, which looks something like the below:
 ![readme/NewsEmail.png](readme/NewsEmail.png)
 
+In a later feature add (not part of the tutorial followed), we enabled the functionality for users to unsubscribe to emails.
+
 ### Part 7: Search Functionality
 
 To enable users to search for stocks, we used Finnhub's Stock API to pull data on tickers.
@@ -146,3 +148,5 @@ Vercel was used for deployment. The only minor issue we ran into here was a Next
 ### Part 10: Google Auth 
 
 Through Google Cloud, we enabled users to be able to authenticate, sign themselves up, or link existing accounts to Google.
+
+Note for this part, we also needed to verify our domain via Google Search Console, for which we added the Google URL suffix file under our `public/` directory for.
