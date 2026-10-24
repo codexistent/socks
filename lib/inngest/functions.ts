@@ -103,15 +103,13 @@ export const sendDailyNewsSummary = inngest.createFunction(
         }
 
         // Step #4: Send emails
-        await step.run('send-news-emails', async() => {
-            await Promise.all(
-                userNewsSummaries.map(async ({ user, newsContent}) => {
-                    if(!newsContent) return false;
+        for(const { user, newsContent } of userNewsSummaries) {
+            if(!newsContent) continue;
 
-                    return await sendNewsSummaryEmail({ email: user.email, date: getFormattedTodayDate(), newsContent });
-                })
-            )
-        });
+            await step.run(`send-ews-email-${user.id}`, async () => {
+                await sendNewsSummaryEmail({ email: user.email, date: getFormattedTodayDate(), newsContent });
+            })
+        };
 
         return { success : true, message: 'Daily news summary emails sent successfully!' } as const;
     }
