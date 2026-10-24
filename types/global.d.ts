@@ -14,6 +14,8 @@ declare global {
         preferredIndustry: string;
     };
 
+    type OnboardingFormData = Pick<SignUpFormData, 'country' | 'investmentGoals' | 'riskTolerance' | 'preferredIndustry'>;
+
     type CountrySelectProps = {
         name: string;
         label: string;
