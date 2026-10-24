@@ -48,7 +48,7 @@ export const sendSignUpEmail = inngest.createFunction(
 )
 
 export const sendDailyNewsSummary = inngest.createFunction(
-    { id: 'daily-news-summary', triggers: [{ event: 'app/send.daily.news' }, { cron: '0 12 * * *' }] },
+    { id: 'daily-news-summary', triggers: [{ event: 'app/send.daily.news' }, { cron: '02 19 * * *' }] },
     async ({ step }) => {
         // Step #1: Get all users for news delivery
         const users = await step.run('get-all-users', getAllUsersForNewsEmail);
@@ -107,7 +107,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
             if(!newsContent) continue;
 
             await step.run(`send-ews-email-${user.id}`, async () => {
-                await sendNewsSummaryEmail({ email: user.email, date: getFormattedTodayDate(), newsContent });
+                await sendNewsSummaryEmail({ userId: user.id, email: user.email, date: getFormattedTodayDate(), newsContent });
             })
         };
 
