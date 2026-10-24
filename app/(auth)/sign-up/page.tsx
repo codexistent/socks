@@ -63,7 +63,7 @@ const SignUp = () => {
                     placeholder="socks@socks.socks"
                     register={register}
                     error={errors.email}
-                    validation={{required:'Email is required', pattern: /^\w+@\w+\.\w+$/, message: 'Email is required'}}
+                    validation={{required:'Email is required', pattern: /^[\w.]+@\w+\.\w+$/, message: 'Email is required'}}
                 />
 
                 <InputField
