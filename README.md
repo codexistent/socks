@@ -135,3 +135,8 @@ To enable users to search for stocks, we used Finnhub's Stock API to pull data o
 ### Part 8: Stock Details
 
 We added functionality enabling users to view a detailed information page for specific stocks. The implementation for this part actually came out quite similar compared to building our Watchlist tab, as we put together several TradingView widgets to build out our page. Due to our having set up the components => pages workflow in prior parts, adding in new TradingView widgets for our page was relatively straighforward.
+
+### Part 9: Deployment
+
+Vercel was used for deployment. The only minor issue we ran into here was a Next.js version vulnerability, which was fixed through the PR `Fix React Server Components CVE vulnerabilities` with auto-generated change suggestions from Vercel:
+![readme/vercelerror.png](readme/vercelerror.png)
