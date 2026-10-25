@@ -7,6 +7,7 @@ import Link from "next/link";
 import {Loader2, TrendingUp} from "lucide-react";
 import {searchStocks} from "@/lib/actions/finnhub.actions";
 import {useDebounce} from "@/hooks/useDebounce";
+import WatchlistButton from "@/components/WatchlistButton";
 
 export default function SearchCommand({ renderAs = 'button', label = 'Add stock', initialStocks }: SearchCommandProps) {
     const [ open, setOpen ] = useState(false)
@@ -54,6 +55,10 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
         setOpen(false);
         setStocks(initialStocks);
     }
+
+    const handleWatchlistChange = (symbol: string, isAdded: boolean) => {
+        setStocks((prev) => prev.map((s) => (s.symbol === symbol ? { ...s, isInWatchlist: isAdded } : s)));
+    };
 
     return(
         <>
@@ -106,7 +111,13 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                                                 </div>
                                             </div>
                                         </Link>
-                                        {/* <Star/> */}
+                                        <WatchlistButton
+                                            type="icon"
+                                            symbol={stock.symbol}
+                                            company={stock.name}
+                                            isInWatchlist={stock.isInWatchlist}
+                                            onWatchlistChange={handleWatchlistChange}
+                                        />
                                       </li>
                                   ))}
                               </ul>

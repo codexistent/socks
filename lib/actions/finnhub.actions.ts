@@ -1,8 +1,16 @@
 'use server';
 
-import { getDateRange, validateArticle, formatArticle } from '@/lib/utils';
+import {
+    getDateRange,
+    validateArticle,
+    formatArticle,
+    formatPrice,
+    formatChangePercent,
+    formatMarketCapValue
+} from '@/lib/utils';
 import { cache } from 'react';
 import {POPULAR_STOCK_SYMBOLS} from "@/lib/constants";
+import {getCurrentUserWatchlistSymbols} from "@/lib/actions/watchlist.actions";
 
 type FinnhubProfile = { name?: string; ticker?: string; exchange?: string };
 type SearchResultWithExchange = FinnhubSearchResult & { exchange?: string };
@@ -150,6 +158,8 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
             results = Array.isArray(data?.result) ? data.result : [];
         }
 
+        const watchlistSymbols = new Set(await getCurrentUserWatchlistSymbols());
+
         const mapped: StockWithWatchlistStatus[] = results
             .map((r) => {
                 const upper = (r.symbol || '').toUpperCase();
@@ -158,8 +168,8 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
                     name: r.description || upper,
                     exchange: r.exchange || 'US',
                     type: r.type || 'Stock',
-                    isInWatchlist: false,
-                };
+                    isInWatchlist: watchlistSymbols.has(upper),
+                }
             })
             .slice(0, 15);
 
@@ -169,3 +179,31 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
         return [];
     }
 });
+
+export async function getStocksDetails(symbol: string) {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if(!token) throw new Error('FINNHUB API key is not configured');
+
+    const sym = encodeURIComponent(symbol.trim().toUpperCase());
+
+    const [quote, profile, financials] = await Promise.all([
+        fetchJSON<QuoteData>(`${FINNHUB_BASE_URL}/quote?symbol=${sym}&token=${token}`, 60),
+        fetchJSON<ProfileData>(`${FINNHUB_BASE_URL}/stock/profile2?symbol=${sym}&token=${token}`, 3600),
+        fetchJSON<FinancialsData>(`${FINNHUB_BASE_URL}/stock/metric?symbol=${sym}&metric=all&token=${token}`, 1800),
+    ]);
+
+    const currentPrice = quote.c || undefined;
+    const changePercent = quote.dp;
+    const peRatio = financials.metric?.peNormalizedAnnual ?? financials.metric?.peBasicExclExtraTTM;
+
+    return {
+        symbol: symbol.toUpperCase(),
+        company: profile.name ?? '',
+        currentPrice,
+        changePercent,
+        priceFormatted: currentPrice ? formatPrice(currentPrice) : 'N/A',
+        changeFormatted: formatChangePercent(changePercent) || '0.00%',
+        marketCap: formatMarketCapValue((profile.marketCapitalization ?? 0) * 1e6),
+        peRatio: peRatio ? peRatio.toFixed(1) : 'N/A',
+    };
+}
