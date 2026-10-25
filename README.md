@@ -149,4 +149,10 @@ Vercel was used for deployment. The only minor issue we ran into here was a Next
 
 Through Google Cloud, we enabled users to be able to authenticate, sign themselves up, or link existing accounts to Google.
 
-Note for this part, we also needed to verify our domain via Google Search Console, for which we added the Google URL suffix file under our `public/` directory for.
+Note for this part, we also needed to verify our domain via Google Search Console, for which we added the Google URL suffix file under our `public/` 
+
+### Part 11: Watchlist CRUD
+
+Under the `Watchlist` tab, users can view information on their list of starred stocks. Stocks can be added/removed from the watchlist through either the search bar pop-up or directly on the `Watchlist` page. 
+
+Info on watchlist stocks are currently stored in a single MongoDB collection across all users (plainly named `watchlist`). Each document in `watchlist` consists of the `userId` of the account adding the stock to their watchlist, as well as the ticker symbol. When users open their `Watchlist` page, all documents from the collection are pulled out and filtered until only those with matching `userId` remain. Finally, the filtered list of watchlist stocks are displayed via a rendered `WatchlistTable` component.
