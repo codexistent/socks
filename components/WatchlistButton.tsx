@@ -1,5 +1,7 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, {useMemo, useState, useTransition} from "react";
+import {addToWatchlist, removeFromWatchlist} from "@/lib/actions/watchlist.actions";
+import {toast} from "sonner";
 
 // Minimal WatchlistButton implementation to satisfy page requirements.
 // This component focuses on UI contract only. It toggles local state and
@@ -14,21 +16,39 @@ const WatchlistButton = ({
                              onWatchlistChange,
                          }: WatchlistButtonProps) => {
     const [added, setAdded] = useState<boolean>(!!isInWatchlist);
+    const [isPending, startTransition] = useTransition();
 
-    const label = useMemo(() => {
-        if (type === "icon") return added ? "" : "";
-        return added ? "Remove from Watchlist" : "Add to Watchlist";
-    }, [added, type]);
+    const label = added ? "Remove from Watchlist" : "Add to Watchlist";
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         const next = !added;
         setAdded(next);
-        onWatchlistChange?.(symbol, next);
+
+        startTransition(async () => {
+            const result = next
+                ? await addToWatchlist(symbol, company)
+                : await removeFromWatchlist(symbol);
+
+            if(!result.success){
+                setAdded(!next);
+                toast.error(result.error ?? 'Watchlist update failed');
+                return;
+            }
+
+            toast.success(next ? `${symbol} added to watchlist` : `${symbol} removed from watchlist`);
+            onWatchlistChange?.(symbol, next);
+        });
     };
 
     if (type === "icon") {
         return (
             <button
+                type="button"
+                disabled={isPending}
+                aria-pressed={added}
                 title={added ? `Remove ${symbol} from watchlist` : `Add ${symbol} to watchlist`}
                 aria-label={added ? `Remove ${symbol} from watchlist` : `Add ${symbol} to watchlist`}
                 className={`watchlist-icon-btn ${added ? "watchlist-icon-added" : ""}`}
@@ -40,7 +60,7 @@ const WatchlistButton = ({
                     fill={added ? "#FACC15" : "none"}
                     stroke="#FACC15"
                     strokeWidth="1.5"
-                    className="watchlist-star"
+                    className="h-5 w-5"
                 >
                     <path
                         strokeLinecap="round"
