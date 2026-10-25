@@ -4,7 +4,7 @@ Socks is a s(t)ock market application, without the T (as in ``T``aste of a bad U
 
 ## Building Socks
 
-Parts 1-9 of the app (as described below) were built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. 
+Parts 1-8 and 11 of the app (as described below) were built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. 
 
 Several tools and languages were used throughout development, including the programming languages:
 - Typescript
