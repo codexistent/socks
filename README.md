@@ -20,15 +20,13 @@ as well as:
 - **Google AI Studio** to personalize content for users
 - **Finnhub API** for stock market data
 
-Regarding AI usage: while Junie, an AI coding tool, was utilized throughout the video, Socks was developed without using it. Claude Code was used minimally for debugging purposes.
-
 There were several major parts to Socks' development, as described below.
 
 ### Version 1
 
 The initial version of the app laid the foundational groundwork for more a more complex stock screener application. Specifically, this version set in place a user authentication system, homepage, watchlist, and stock search functionalities (without filters/screening capabilities yet). We also enabled email communication.
 
-Parts 1-8 and 11 as described below were built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng.
+Parts 1-8 and 11 as described below were built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. Regarding AI usage in this part - while Junie, an AI coding tool, was utilized throughout the video, Socks was developed without using it. Claude Code was used minimally for debugging purposes.
 
 #### Part 0: The Logo
 It was initially difficult to envision Socks' logo, until the realization that it could simply be two Socks placed stylishly, one upon the other.
@@ -163,4 +161,15 @@ Info on watchlist stocks are currently stored in a single MongoDB collection acr
 
 ## Version 2
 
-The focus of this version was in adding stock screening capabilities.
+Our focus in this upgrade was twofold: firstly, adding stock screening capabilities and secondly, improving speed/performance. Finally, we also made some minor patches. 
+
+For Version 2, I used Claude Code to discuss high-level architecture options for performance (i.e. perceived speed, optimization techniques) or for the screener (e.g. where filtering should happen and how to cache Finnhub responses), with the implementation and final decisions were made on my own.
+
+### Performance
+
+On performance, we made code changes in line with the following considerations:
+- To increase the perceived speed of the application, we added the `loading.tsx` component (we didn't place it in the `components` directory because it's not quite a component which needs to be refactored across uses). This way, as soon as a user clicks on anything, the `loading` component is shown instantly while the page loads on the server
+- In `lib/better-auth/auth.ts`, we cache the MongoDB session data (which could contain info on things like remote sign-outs or direct database edits), only re-fetching each 5 minutes. This way, our application is not slowed by repeated MongoDB requests. The tradeoff here is, ofcourse, stale data; however, BetterAuth changes are safe as `updateUser` rewrites the cookies immediately so onboarding still works properly
+    - Note here that `BetterAuth` is not a database or data store of any type but simply a library which then propagates necessary DB changes to MongoDB
+- For the search bar, we currently fetch FinnHub data as soon as the user opens up `Search`/before they search anything. Then each unique/new search the user types in is given to FinnHub, with old searches cached. Now to increase initial load-up speed of the bar, we skipped loading in the initial stocks list and only fetch data after user types something into the search bar. 
+    - 

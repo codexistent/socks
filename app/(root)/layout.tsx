@@ -6,12 +6,13 @@ import {redirect} from "next/navigation";
 
 const Layout = async ({ children }: { children : React.ReactNode }) => {
     const h = await headers();
-    const session = await auth.api.getSession({ headers: await headers() })
+    const [session, accounts] = await Promise.all([
+       auth.api.getSession({ headers: h}),
+       auth.api.listUserAccounts({ headers: h }).catch(() => []),
+    ]);
 
     if(!session?.user) redirect('/sign-in')
     if(!session.user.country) redirect('/onboarding');
-
-    const accounts = await auth.api.listUserAccounts({ headers: h });
 
     const user = {
         id: session.user.id,

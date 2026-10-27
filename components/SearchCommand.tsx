@@ -9,14 +9,22 @@ import {searchStocks} from "@/lib/actions/finnhub.actions";
 import {useDebounce} from "@/hooks/useDebounce";
 import WatchlistButton from "@/components/WatchlistButton";
 
-export default function SearchCommand({ renderAs = 'button', label = 'Add stock', initialStocks }: SearchCommandProps) {
+export default function SearchCommand({ renderAs = 'button', label = 'Add stock' }: SearchCommandProps) {
     const [ open, setOpen ] = useState(false)
     const [ searchTerm, setSearchTerm ] = useState('')
-    const [ loading, setLoading ] = useState(false)
-    const [ stocks, setStocks ] = useState<StockWithWatchlistStatus[]>(initialStocks);
+    const [ searching, setSearching ] = useState(false)
+
+    const [ popular, setPopular ] = useState<StockWithWatchlistStatus[] | null>(null)
+    const [ results, setResults ] = useState<StockWithWatchlistStatus[]>([])
 
     const isSearchMode = !!searchTerm.trim();
-    const displayStocks = isSearchMode ? stocks : stocks?.slice(0, 10);
+    const displayStocks = isSearchMode ? results : (popular ?? []).slice(0, 10);
+    const loading = searching || (open && !isSearchMode && popular === null);
+
+    //
+    useEffect(() => {
+        if(!open || popular) return;
+    }, [open, popular]);
 
     useEffect(()=>{
         const onKeyDown = (e: KeyboardEvent) => {
@@ -31,16 +39,15 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     }, [])
 
     const handleSearch = async () => {
-        if(!isSearchMode) return setStocks(initialStocks);
+        if(!isSearchMode) return setResults([]);
 
-        setLoading(true)
+        setSearching(true)
         try {
-            const results = await searchStocks(searchTerm.trim());
-            setStocks(results);
+            setResults(await searchStocks(searchTerm.trim()))
         } catch {
-            setStocks([]);
+            setResults([]);
         } finally {
-            setLoading(false)
+            setSearching(false)
         }
     }
 
@@ -51,13 +58,15 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     }, [searchTerm]);
 
     const handleSelectStock = () => {
-        console.log("stock selected");
         setOpen(false);
-        setStocks(initialStocks);
+        setSearchTerm('');
     }
 
     const handleWatchlistChange = (symbol: string, isAdded: boolean) => {
-        setStocks((prev) => prev.map((s) => (s.symbol === symbol ? { ...s, isInWatchlist: isAdded } : s)));
+        const update = (list: StockWithWatchlistStatus[]) =>
+            list.map((s) => (s.symbol === symbol ? { ...s, isInWatchlist: isAdded } : s));
+        setResults(update);
+        setPopular((prev) => prev && update(prev));
     };
 
     return(

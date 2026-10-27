@@ -17,7 +17,7 @@ import {signOut} from "@/lib/actions/auth.actions";
 import {authClient} from "@/lib/better-auth/client";
 import {toast} from "sonner";
 
-const UserDropdown = ({ user, initialStocks }: { user: User, initialStocks: StockWithWatchlistStatus[] }) => {
+const UserDropdown = ({ user }: { user: User }) => {
     const router = useRouter();
 
     const handleSignOut = async () => {
@@ -80,7 +80,7 @@ const UserDropdown = ({ user, initialStocks }: { user: User, initialStocks: Stoc
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="hidden sm:block bg-gray-600"/>
                 <nav className="sm:hidden">
-                    <NavItems initialStocks={initialStocks}/>
+                    <NavItems />
                 </nav>
             </DropdownMenuContent>
         </DropdownMenu>
