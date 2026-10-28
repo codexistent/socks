@@ -65,7 +65,12 @@ const createAuth = (db: Db) =>
                 },
             },
         },
-
+        session: {
+            cookieCache: {
+                enabled: true,
+                maxAge: 5 * 60,
+            },
+        },
         plugins: [nextCookies()],
     });
 

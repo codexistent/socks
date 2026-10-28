@@ -1,3 +1,4 @@
+import {Suspense} from "react";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import WatchlistButton from "@/components/WatchlistButton";
 import {
@@ -11,16 +12,24 @@ import {
 import {getCurrentUserWatchlistSymbols} from "@/lib/actions/watchlist.actions";
 import {getStocksDetails} from "@/lib/actions/finnhub.actions";
 
+async function StockWatchlistButton({ symbol }:{ symbol : string }) {
+    const [ watchlistSymbols, details ] = await Promise.all([
+        getCurrentUserWatchlistSymbols(),
+        getStocksDetails(symbol).catch(() => null),
+    ]);
+
+    return (
+        <WatchlistButton
+            symbol={symbol}
+            company={details?.company || symbol}
+            isInWatchlist={watchlistSymbols.includes(symbol)}
+        />
+    );
+}
+
 export default async function StockDetails({ params }: StockDetailsPageProps) {
     const { symbol } = await params;
     const upper = symbol.toUpperCase();
-
-    const [watchlistSymbols, details] = await Promise.all([
-        getCurrentUserWatchlistSymbols(),
-        getStocksDetails(upper).catch(() => null),
-    ]);
-    const isInWatchlist = watchlistSymbols.includes(upper);
-    const company = details?.company || upper;
 
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
@@ -52,9 +61,9 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
 
                 {/* Right column */}
                 <div className="flex flex-col gap-6">
-                    <div className="flex items-center justify-between">
-                        <WatchlistButton symbol={upper} company={company} isInWatchlist={isInWatchlist} />
-                    </div>
+                    <Suspense fallback={<div className="watchlist-btn opacity-50 animate-pulse" aria-hidden />}>
+                        <StockWatchlistButton symbol={upper} />
+                    </Suspense>
 
                     <TradingViewWidget
                         scriptUrl={`${scriptUrl}technical-analysis.js`}

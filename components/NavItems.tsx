@@ -5,7 +5,7 @@ import Link from "next/link";
 import {usePathname} from "next/navigation";
 import SearchCommand from "@/components/SearchCommand";
 
-const NavItems = ({initialStocks}: {initialStocks: StockWithWatchlistStatus[] }) => {
+const NavItems = () => {
     const pathname = usePathname();
 
     /* checks if 'path' is a prefix of our current link */
@@ -23,7 +23,6 @@ const NavItems = ({initialStocks}: {initialStocks: StockWithWatchlistStatus[] })
                         <SearchCommand
                             renderAs="text"
                             label="Search"
-                            initialStocks={initialStocks}
                         />
                     </li>
                 )

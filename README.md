@@ -4,8 +4,6 @@ Socks is a s(t)ock market application, without the T (as in ``T``aste of a bad U
 
 ## Building Socks
 
-Parts 1-8 and 11 of the app (as described below) were built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. 
-
 Several tools and languages were used throughout development, including the programming languages:
 - Typescript
 - Next.JS
@@ -22,24 +20,28 @@ as well as:
 - **Google AI Studio** to personalize content for users
 - **Finnhub API** for stock market data
 
-Regarding AI usage: while Junie, an AI coding tool, was utilized throughout the video, Socks was developed without using it. Claude Code was used minimally for debugging purposes.
-
 There were several major parts to Socks' development, as described below.
 
-### Part 0: The Logo
+### Version 1
+
+The initial version of the app laid the foundational groundwork for more a more complex stock screener application. Specifically, this version set in place a user authentication system, homepage, watchlist, and stock search functionalities (without filters/screening capabilities yet). We also enabled email communication.
+
+Parts 1-8 and 11 as described below were built following this tutorial: https://www.youtube.com/watch?v=gu4pafNCXng. Regarding AI usage in this part - while Junie, an AI coding tool, was utilized throughout the video, Socks was developed without using it. Claude Code was used minimally for debugging purposes.
+
+#### Part 0: The Logo
 It was initially difficult to envision Socks' logo, until the realization that it could simply be two Socks placed stylishly, one upon the other.
 
 For this, Pixlr was used. The result is below:
 
 ![readme/Logo.png](readme/Logo.png)
 
-### Part 1: Layout and Header Setup
+#### Part 1: Layout and Header Setup
 
 To cleanly develop Socks' layout so it was reusable and scalable, we incorporated the following during the development of Socks' primary layout and headers setup:
 - React's App Router feature, for simpler and scalable page URLs
 - A separate `constants.ts` file to detach some style or settings variables for our application from the interface code itself (in considering the 'separation of concerns' principle)
 
-### Part 2: Homepage
+#### Part 2: Homepage
 
 Our homepage includes four TradingView stock market widgets. 
 
@@ -49,7 +51,7 @@ Note here that all the components for our website are added under the `@/compone
 
 ![readme/homepage.png](readme/homepage.png)
 
-### Part 3: Auth UI & Layout
+#### Part 3: Auth UI & Layout
 
 To begin with, while not being exclusive to this part in terms of its functionality, we created a globally accessible `types` directory and `global.d.ts` file for storing types which are usable across the entire project.
 
@@ -62,7 +64,7 @@ The resulting forms appeared like the below:
 ![readme/signup.png](readme/signup.png)
 ![readme/signin.png](readme/signin.png)
 
-### Part 4: The Database
+#### Part 4: The Database
 
 This app uses the cloud-based MongoDB Atlas, communicating with the database via the ORM Mongoose. Crucially, in `mongoose.ts`, we implemented a new singleton-style Mongoose connector with a global cache which exports `connectToDatabase`.
 
@@ -70,7 +72,7 @@ To validate, we used CLI testing by creating the new script `test:db`. This succ
 
 ![readme/testdb.png](readme/testdb.png)
 
-### Part 5: Authentication Logic
+#### Part 5: Authentication Logic
 
 In this part, we integrated the following tools:
 - BetterAuth for user authentication
@@ -79,7 +81,7 @@ In this part, we integrated the following tools:
 
 The result was completed functionality for user sign up and sign in, wih the added perk of user email communication amongst important events (such as successful user sign up).
 
-#### Bugs/Issues
+##### Bugs/Issues
 One issue we ran into was as in `auth.ts`, where when creating the singleton `authInstance`, there were incompatible types between what was being passed as props when initializing it to a new `betterAuth` object versus what `betterAuth` expected. Initially, `authInstance` was initialized in the following way:
 ```typescript
 let authInstance: ReturnType<typeof betterAuth> | null = null;
@@ -119,7 +121,7 @@ const createAuth = (db: Db) =>
     });
 ```
 
-### Part 6: Daily News Summary
+#### Part 6: Daily News Summary
 
 We implemented the following four-step workflow to enable email-based communication of daily news summaries for users:
 1. Schedule async workflow with Inngest, retrieving all users who are on mailing list
@@ -132,27 +134,45 @@ The result is a customized daily news summary sent out to all users, which looks
 
 In a later feature add (not part of the tutorial followed), we enabled the functionality for users to unsubscribe to emails.
 
-### Part 7: Search Functionality
+#### Part 7: Search Functionality
 
 To enable users to search for stocks, we used Finnhub's Stock API to pull data on tickers.
 
-### Part 8: Stock Details
+#### Part 8: Stock Details
 
 We added functionality enabling users to view a detailed information page for specific stocks. The implementation for this part actually came out quite similar compared to building our Watchlist tab, as we put together several TradingView widgets to build out our page. Due to our having set up the components => pages workflow in prior parts, adding in new TradingView widgets for our page was relatively straighforward.
 
-### Part 9: Deployment
+#### Part 9: Deployment
 
 Vercel was used for deployment. The only minor issue we ran into here was a Next.js version vulnerability, which was fixed through the PR `Fix React Server Components CVE vulnerabilities` with auto-generated change suggestions from Vercel:
 ![readme/vercelerror.png](readme/vercelerror.png)
 
-### Part 10: Google Auth 
+#### Part 10: Google Auth 
 
 Through Google Cloud, we enabled users to be able to authenticate, sign themselves up, or link existing accounts to Google.
 
 Note for this part, we also needed to verify our domain via Google Search Console, for which we added the Google URL suffix file under our `public/` 
 
-### Part 11: Watchlist CRUD
+#### Part 11: Watchlist CRUD
 
 Under the `Watchlist` tab, users can view information on their list of starred stocks. Stocks can be added/removed from the watchlist through either the search bar pop-up or directly on the `Watchlist` page. 
 
 Info on watchlist stocks are currently stored in a single MongoDB collection across all users (plainly named `watchlist`). Each document in `watchlist` consists of the `userId` of the account adding the stock to their watchlist, as well as the ticker symbol. When users open their `Watchlist` page, all documents from the collection are pulled out and filtered until only those with matching `userId` remain. Finally, the filtered list of watchlist stocks are displayed via a rendered `WatchlistTable` component.
+
+## Version 2
+
+Our focus in this upgrade was twofold: firstly, adding stock screening capabilities and secondly, improving speed/performance. Finally, we also made some minor patches. 
+
+For Version 2, I used Claude Code to discuss high-level architecture options for performance (i.e. perceived speed, optimization techniques) or for the screener (e.g. where filtering should happen and how to cache Finnhub responses), with the implementation and final decisions were made on my own.
+
+### Performance
+
+On performance, we made code changes in line with the following considerations:
+- To increase the perceived speed of the application, we added the `loading.tsx` component (we didn't place it in the `components` directory because it's not quite a component which needs to be refactored across uses). This way, as soon as a user clicks on anything, the `loading` component is shown instantly while the page loads on the server
+- In `lib/better-auth/auth.ts`, we cache the MongoDB session data (which could contain info on things like remote sign-outs or direct database edits), only re-fetching each 5 minutes. This way, our application is not slowed by repeated MongoDB requests. The tradeoff here is, ofcourse, stale data; however, BetterAuth changes are safe as `updateUser` rewrites the cookies immediately so onboarding still works properly
+    - Note here that `BetterAuth` is not a database or data store of any type but simply a library which then propagates necessary DB changes to MongoDB
+- For the search bar, we currently fetch FinnHub data as soon as the user opens up `Search`/before they search anything. Then each unique/new search the user types in is given to FinnHub, with old searches cached. Now to increase initial load-up speed of the bar, we skipped loading in the initial stocks list and only fetch data after user types something into the search bar. 
+    - Before: ![readme/after.png](readme/after.png)
+    - After: ![readme/before.png](readme/before.png)
+- Individual stock pages may possibly be slowed by the loading of their watchlist buttons (since pages are always as slow as their slowest synchronous component). To mitigate this, we can simply bring out the watchlist button to its own async component, `StockWatchlistButton`, and load it into `StockDetails`.
+- For the `useTradingViewWidget.tsx`, we implemented lazy loading so charts load once they scroll into view, instead of slowing down the entire page as soon as the user lands on it
