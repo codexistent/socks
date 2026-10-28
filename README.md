@@ -172,4 +172,7 @@ On performance, we made code changes in line with the following considerations:
 - In `lib/better-auth/auth.ts`, we cache the MongoDB session data (which could contain info on things like remote sign-outs or direct database edits), only re-fetching each 5 minutes. This way, our application is not slowed by repeated MongoDB requests. The tradeoff here is, ofcourse, stale data; however, BetterAuth changes are safe as `updateUser` rewrites the cookies immediately so onboarding still works properly
     - Note here that `BetterAuth` is not a database or data store of any type but simply a library which then propagates necessary DB changes to MongoDB
 - For the search bar, we currently fetch FinnHub data as soon as the user opens up `Search`/before they search anything. Then each unique/new search the user types in is given to FinnHub, with old searches cached. Now to increase initial load-up speed of the bar, we skipped loading in the initial stocks list and only fetch data after user types something into the search bar. 
-    - 
+    - Before: ![readme/after.png](readme/after.png)
+    - After: ![readme/before.png](readme/before.png)
+- Individual stock pages may possibly be slowed by the loading of their watchlist buttons (since pages are always as slow as their slowest synchronous component). To mitigate this, we can simply bring out the watchlist button to its own async component, `StockWatchlistButton`, and load it into `StockDetails`.
+- For the `useTradingViewWidget.tsx`, we implemented lazy loading so charts load once they scroll into view, instead of slowing down the entire page as soon as the user lands on it
