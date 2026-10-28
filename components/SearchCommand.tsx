@@ -24,6 +24,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     //
     useEffect(() => {
         if(!open || popular) return;
+        searchStocks().then(setPopular).catch(() => setPopular([]));
     }, [open, popular]);
 
     useEffect(()=>{
