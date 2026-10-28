@@ -2,10 +2,14 @@ import React from 'react'
 import {Star} from "lucide-react";
 import SearchCommand from "@/components/SearchCommand";
 import {getWatchlistWithData} from "@/lib/actions/watchlist.actions";
+import {searchStocks} from "@/lib/actions/finnhub.actions";
 import WatchlistTable from "@/components/WatchlistTable";
 
 const WatchlistPage = async () => {
-    const watchlist = await getWatchlistWithData();
+    const [watchlist, initialStocks] = await Promise.all([
+        getWatchlistWithData(),
+        searchStocks(),
+    ]);
 
     if(watchlist.length === 0){
         return (
@@ -17,7 +21,7 @@ const WatchlistPage = async () => {
                         Search for stocks and star them to follow their prices here.
                     </p>
                 </div>
-                <SearchCommand />
+                <SearchCommand initialStocks={initialStocks}/>
             </section>
         );
     }
@@ -26,7 +30,7 @@ const WatchlistPage = async () => {
         <section className="watchlist">
             <div className="flex items-center justify-between">
                 <h2 className="watchlist-title">Watchlist</h2>
-                <SearchCommand />
+                <SearchCommand initialStocks={initialStocks} />
             </div>
             <WatchlistTable watchlist={watchlist}/>
         </section>
