@@ -176,3 +176,26 @@ On performance, we made code changes in line with the following considerations:
     - After: ![readme/before.png](readme/before.png)
 - Individual stock pages may possibly be slowed by the loading of their watchlist buttons (since pages are always as slow as their slowest synchronous component). To mitigate this, we can simply bring out the watchlist button to its own async component, `StockWatchlistButton`, and load it into `StockDetails`.
 - For the `useTradingViewWidget.tsx`, we implemented lazy loading so charts load once they scroll into view, instead of slowing down the entire page as soon as the user lands on it
+
+### Screener
+
+Our screener is a separate tab in our application, just like 'search' and 'watchlist'. As a whole, we implemented it in two parts.
+
+### Part 1: Browse
+
+The 'landing page' of our screener tab is a list of stocks the user can browse. It consists of a selection of stocks from the ones we allow users to screen from. 
+
+In terms of architecture, we used a read-based model that is filled in the background:
+![readme/browse-arch.png](readme/browse-arch.png)
+
+Several considerations were made when designing the architecture:
+- Separating reading from writing
+  - Prevents either from delaying the other
+- Batching for requests
+  - We have 3 types of requests (stock prices, stock profiles, metrics) x 500 stocks = 1,500 requests total
+  - The scheduler splits our FinnHub data requests into batches of size 10; the worker sends out at most 4 batches/min
+  - This helps with
+    - Staying within FinnHub and Inngest rate limits
+      - FinnHub has a limit of 60 requests per min
+      - Inngest has a limit of 4 batches per min
+    - Small batches = only need to redo a smaller portion of the work if one request fails
