@@ -186,6 +186,7 @@ Our screener is a separate tab in our application, just like 'search' and 'watch
 The 'landing page' of our screener tab is a list of stocks the user can browse. It consists of a selection of stocks from the ones we allow users to screen from. 
 
 In terms of architecture, we used a read-based model that is filled in the background:
+
 ![readme/browse-arch.png](readme/browse-arch.png)
 
 Several considerations were made when designing the architecture:
