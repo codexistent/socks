@@ -36,6 +36,7 @@ const SignUp = () => {
         try {
             const result = await signUpWithEmail(data);
             if(result.success) router.push('/');
+            else toast.error('Sign up failed', { description: result.error });
         } catch (e) {
             console.error(e);
             toast.error('Sign up failed', {
@@ -73,7 +74,7 @@ const SignUp = () => {
                     placeholder="socks@socks.socks"
                     register={register}
                     error={errors.email}
-                    validation={ { required:'Email is required', pattern: { value: /^\w+(\.\w+)*@\w+(\.\w+)+$/, message: 'Email is required' } } }
+                    validation={ { required:'Email is required', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' } } }
                 />
 
                 <InputField

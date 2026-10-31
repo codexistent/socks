@@ -16,7 +16,7 @@ export const signUpWithEmail = async ({ email, password, fullName, country, inve
         return { success: true, data: response }
     } catch(e) {
         console.log('Sign up failed', e)
-        return { success: false, error: 'Sign up failed' }
+        return { success: false, error: e instanceof Error ? e.message : 'Sign up failed' }
     }
 }
 
@@ -29,7 +29,7 @@ export const signInWithEmail = async ({ email, password }: SignInFormData) => {
         return { success: true, data: response }
     } catch(e) {
         console.log('Sign in failed', e)
-        return { success: false, error: 'Sign in failed' }
+        return { success: false, error: e instanceof Error ? e.message : 'Sign in failed' }
     }
 }
 
@@ -50,7 +50,8 @@ export const completeOnboarding = async (data: OnboardingFormData) => {
         const session = await auth.api.getSession({ headers: h });
         if(!session?.user) return { success: false, error: 'You are not signed in' };
 
-        if(session.user.country) return { success: false };
+        // already onboarded
+        if(session.user.country) return { success: true };
 
         const { country, investmentGoals, riskTolerance, preferredIndustry } = data;
         if(
