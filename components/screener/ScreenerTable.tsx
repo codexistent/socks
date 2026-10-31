@@ -1,7 +1,7 @@
 import {ColumnId, COLUMNS, formatValue, ViewId, VIEWS} from "@/lib/screener/catalog";
 import WatchlistButton from "@/components/WatchlistButton";
-import {hrefWith, ScreenerState} from "@/lib/screener/state";
-import {ScreenerRow} from "@/lib/screener/repository";
+import {hrefWith, type ScreenerState} from "@/lib/screener/state";
+import {type ScreenerRow} from "@/lib/screener/repository";
 import {effectiveSort} from "@/lib/screener/query";
 import Link from "next/link";
 

@@ -17,7 +17,7 @@ const get = async <T>(path: string, params: Record<string, string>): Promise<T> 
     const token = process.env.FINNHUB_API_KEY ?? process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
     if(!token) throw new Error('FINNHUB_API_KEY is not set');
 
-    const url = `${BASE_URL}${path}?${new URLSearchParams({ ...params, token })}}`;
+    const url = `${BASE_URL}${path}?${new URLSearchParams({ ...params, token })}`;
 
     const res = await fetch(url, { cache: 'no-store' });
     if(!res.ok) throw new FinnhubError(res.status, path);

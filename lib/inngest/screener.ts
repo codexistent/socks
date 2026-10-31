@@ -7,7 +7,7 @@ const BATCHES_PER_MINUTE = 4;
 
 const SCHEDULES: Record<SyncKind, string> = {
     profiles: 'TZ=America/New_York 0 5 * * 0',
-    metrics: 'TZ-America/New_York 0 6 * * 2-6',
+    metrics: 'TZ=America/New_York 0 6 * * 2-6',
     quotes: 'TZ=America/New_York */30 9-16 * * 1-5',
 };
 

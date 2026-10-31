@@ -1,8 +1,8 @@
 'use client';
 
 import Link from "next/link";
-import {hrefWith, ScreenerState} from "@/lib/screener/state";
-import {ScreenerMenu} from "@/lib/screener/catalog";
+import {hrefWith, type ScreenerState} from "@/lib/screener/state";
+import {type ScreenerMenu} from "@/lib/screener/catalog";
 import {useEffect, useState, useTransition} from "react";
 import {useRouter} from "next/navigation";
 

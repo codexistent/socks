@@ -1,5 +1,5 @@
 /**
- * Purpose: Refreshes data/sp500.json, a list of exactly 500 stocks for which our screener covers
+ * Purpose: Refreshes data/sp500.json, a list of exactly 503 stocks for which our screener covers
  *      node scripts/update-sp500.mjs
  */
 

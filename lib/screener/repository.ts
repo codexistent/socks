@@ -1,5 +1,5 @@
 import {ColumnId, COLUMNS, ViewId, VIEWS} from "@/lib/screener/catalog";
-import {PAGE_SIZE, ScreenerState} from "@/lib/screener/state";
+import {PAGE_SIZE, type ScreenerState} from "@/lib/screener/state";
 import {effectiveSort, toMongo} from "@/lib/screener/query";
 import {connectToDatabase} from "@/database/mongoose";
 import {StockSnapshotModel} from "@/database/models/stock-snapshot.model";

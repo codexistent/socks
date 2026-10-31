@@ -1,6 +1,6 @@
 /**
  * Purpose: Checker for app data vs live data
- *      node scripts/screener-preview.ts
+ *      npx tsx --env-file=.env scripts/screener-preview.ts AAPL
  */
 
 import {finnhub} from "@/lib/screener/finnhub";

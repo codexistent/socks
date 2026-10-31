@@ -1,4 +1,4 @@
-import {hrefWith, PAGE_SIZE, ScreenerState} from "@/lib/screener/state";
+import {hrefWith, PAGE_SIZE, type ScreenerState} from "@/lib/screener/state";
 import Link from "next/link";
 
 const ScreenerPagination = ({ state, total }: { state: ScreenerState; total: number }) => {
@@ -15,7 +15,7 @@ const ScreenerPagination = ({ state, total }: { state: ScreenerState; total: num
             <p className="text-sm text-gray-500 tabular-nums">{from}-{to} of {total}</p>
             {pages > 1 && (
                 <div className="flex items-center gap-1">
-                    {page > 1 ? <Link href={hrefWith(state, { page: page - 1})} scroll={false} className={`${cell} text-gray-400 hover:text-yellow-500`}>Previous</Link> : <span className={`${cell} text-gray-600}`}>Previous</span>}
+                    {page > 1 ? <Link href={hrefWith(state, { page: page - 1})} scroll={false} className={`${cell} text-gray-400 hover:text-yellow-500`}>Previous</Link> : <span className={`${cell} text-gray-600`}>Previous</span>}
                     {shown.map((p, i) => (
                         <span key={p} className="flex items-center gap-1">
                             {i>0 && p-shown[i-1] > 1 && <span className="text-gray-600">...</span>}

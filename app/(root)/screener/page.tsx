@@ -4,7 +4,7 @@ import {getCurrentUserWatchlistSymbols} from "@/lib/actions/watchlist.actions";
 import {toScreenerMenu} from "@/lib/screener/catalog";
 import ScreenerControls from "@/components/screener/ScreenerControls";
 import ScreenerTable from "@/components/screener/ScreenerTable";
-import ScreenerPagination from "@/lib/screener/ScreenerPagination";
+import ScreenerPagination from "@/components/ScreenerPagination";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -35,7 +35,7 @@ const ScreenerPage = async ({ searchParams }: Props) => {
             {!pricesAsOf? (
                 <div className="watchlist-empty-container">
                     <p className="empty-title">Screener data is on its way</p>
-                    <p className="empty-description">Stack data is collected in the background. Check back in a few minutes</p>
+                    <p className="empty-description">Stock data is collected in the background. Check back in a few minutes</p>
                 </div>
             ) : rows.length === 0 ? (
                 <div className="watchlist-empty-container">
