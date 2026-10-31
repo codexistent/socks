@@ -204,15 +204,15 @@ Several considerations were made when designing the architecture:
 #### Browse File Structure
 
 All of our main browse or screener-related files which we added when building the browse functionality were part of one of five groups.
-- For pulling the universe of stocks
+- Pulling the universe of stocks
   - Files:
     - `scripts/update-sp500.mjs`
     - `data/sp500.json`
     - `lib/screener/universe.ts`
   - For the workflow, `update-sp500.mjs` downloads the S&P 500 list to `sp500.json`, and `universe.ts` exposes this list to our app
-- For the protocols on data we pull for the stocks
+- Protocols on data we pull for the stocks
   - `database/models/stock-snapshot.model.ts` outlines the MongoDB document per stock
-- For background data syncing
+- Background data syncing
   - `lib/screener/finnhub.ts` calls FinnHub
   - `lib/screener/sync.ts` converts Finnhub data to our fields and saves it
   - `lib/inngest/screener.ts` schedules the syncs and throttles them

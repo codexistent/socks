@@ -4,7 +4,7 @@ import {getCurrentUserWatchlistSymbols} from "@/lib/actions/watchlist.actions";
 import {toScreenerMenu} from "@/lib/screener/catalog";
 import ScreenerControls from "@/components/screener/ScreenerControls";
 import ScreenerTable from "@/components/screener/ScreenerTable";
-import ScreenerPagination from "@/components/ScreenerPagination";
+import ScreenerPagination from "@/components/screener/ScreenerPagination";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
