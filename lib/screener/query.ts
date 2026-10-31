@@ -31,7 +31,7 @@ export const parseState = (raw: Raw): ScreenerState => {
 };
 
 export const effectiveSort = (state: ScreenerState) => {
-    const raw = state.sort ?? DEFAULT_SORT;
+    const raw = state.sort ?? (state.signal && SIGNALS_BY_ID.get(state.signal)?.sort) ?? DEFAULT_SORT;
     const column = raw.replace(/^-/, '') as ColumnId;
     return { column, field: COLUMNS[column].field, desc: raw.startsWith('-') };
 };

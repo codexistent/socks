@@ -105,8 +105,8 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                                   </div>
 
                                   {displayStocks?.map((stock, i) => (
-                                      <li key={stock.symbol} className="search-item">
-                                        <Link
+                                      <li key={stock.symbol} className="search-item flex items-center gap-2">
+                                      <Link
                                             href={`/stocks/${stock.symbol}`}
                                             onClick={handleSelectStock}
                                             className="search-item-link"

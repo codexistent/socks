@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {hrefWith, type ScreenerState, toSearch} from "@/lib/screener/state";
 import {type ScreenerMenu} from "@/lib/screener/catalog";
-import {useEffect, useState, useTransition} from "react";
+import {useEffect, useRef, useState, useTransition} from "react";
 import {useRouter} from "next/navigation";
 import {Download, X} from "lucide-react";
 
@@ -23,11 +23,22 @@ const ScreenerControls = ({ state, menu }: { state: ScreenerState; menu: Screene
         go({ filters });
     };
 
+    const sent = useRef(state.q ?? '');
+
     useEffect(() => {
         if(q === (state.q ?? '')) return;
-        const t = setTimeout(() => go({ q: q.trim() || undefined }), 300);
+        const t = setTimeout(() => {
+            sent.current = q.trim();
+            go({q: q.trim() || undefined});
+        }, 300);
         return () => clearTimeout(t);
     }, [q]);
+
+    useEffect(() => {
+        if((state.q ?? '') === sent.current) return;
+        sent.current = state.q ?? '';
+        setQ(state.q ?? '');
+    }, [state.q]);
 
     const labelOf = (id: string, value: string) => {
         const filter = menu.groups.flatMap((g) => g.filters).find((f) => f.id === id);
@@ -40,7 +51,7 @@ const ScreenerControls = ({ state, menu }: { state: ScreenerState; menu: Screene
 
     return (
         <div className="flex flex-col gap-4" aria-busy={isPending}>
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-end">
                 <label className="flex flex-col gap-1.5 text-sm text-gray-500">
                     Signal
                     <select id="screener-signal" className={selectClass} value={state.signal ?? ''} onChange={(e) => go({ signal: e.target.value || undefined, sort: undefined})}>
@@ -58,7 +69,7 @@ const ScreenerControls = ({ state, menu }: { state: ScreenerState; menu: Screene
             </div>
 
             <div className="rounded-lg border border-gray-600 bg-gray-800/40">
-                <div role="tablist" aria-label="Filter groups" className="flex border-b gorder-gray-600 overflow-x-auto">
+                <div role="tablist" aria-label="Filter groups" className="flex border-b border-gray-600 overflow-x-auto">
                     {menu.groups.map((g) => {
                        const count = g.filters.filter((f) => state.filters[f.id]).length;
                        return (
@@ -109,7 +120,7 @@ const ScreenerControls = ({ state, menu }: { state: ScreenerState; menu: Screene
                         </Link>
                     ))}
                 </nav>
-                <div className="flex items-cetnergap-3 text-sm">
+                <div className="flex items-center gap-3 text-sm">
                     {isPending && <span className="text-gray-500">Updating...</span>}
                     <a href={`/api/screener/export?${toSearch(state)}`} className="inline-flex items-center gap-1.5 text-gray-400 hover:text-yellow-500">
                         <Download className="h-4 w-4"/> Export CSV
