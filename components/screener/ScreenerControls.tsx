@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import {hrefWith, ScreenerState} from "@/lib/screener/state";
 import {ScreenerMenu} from "@/lib/screener/catalog";

@@ -203,14 +203,16 @@ Several considerations were made when designing the architecture:
 
 #### Browse File Structure
 
-All of our main browse-related files fall into one of five groups.
-- For pulling our universe of stocks:
-  - `scripts/update-sp500.mjs` downloads the S&P 500 list
-  - `data/sp500.json` stores the saved list
-  - `lib/screener/universe.ts` exposes our list to the code
-- For the protocols on data we pull for the stocks:
-  - `database/models/stock-snapshot.model.ts` outlines the MongoDB documents per stock
-- For background data syncing:
+All of our main browse or screener-related files which we added when building the browse functionality were part of one of five groups.
+- For pulling the universe of stocks
+  - Files:
+    - `scripts/update-sp500.mjs`
+    - `data/sp500.json`
+    - `lib/screener/universe.ts`
+  - For the workflow, `update-sp500.mjs` downloads the S&P 500 list to `sp500.json`, and `universe.ts` exposes this list to our app
+- For the protocols on data we pull for the stocks
+  - `database/models/stock-snapshot.model.ts` outlines the MongoDB document per stock
+- For background data syncing
   - `lib/screener/finnhub.ts` calls FinnHub
   - `lib/screener/sync.ts` converts Finnhub data to our fields and saves it
   - `lib/inngest/screener.ts` schedules the syncs and throttles them
@@ -222,7 +224,7 @@ All of our main browse-related files fall into one of five groups.
   - `lib/screener/query.ts` validates the URL and builds the query
   - `lib/screener/repository.ts` runs the database query
 - UI
-  - `app/(root)/screener/page.tsx` is the page itself
-  - `components/screener/ScreenerControls.tsx` helps search and view tabs
+  - `app/(root)/screener/page.tsx`
+  - `components/screener/ScreenerControls.tsx` are the controls for search and viewing tabs
   - `components/screener/ScreenerTable.tsx` is a table holding sortable results
   - `components/screener/ScreenerPagination.tsx`
