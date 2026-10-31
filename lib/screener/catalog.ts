@@ -1,4 +1,5 @@
 import {StockSnapshot} from "@/database/models/stock-snapshot.model";
+import {FILTER_GROUPS, FILTERS, SIGNALS} from "@/lib/screener/filters";
 
 export type Field = keyof StockSnapshot;
 
@@ -80,6 +81,11 @@ export const formatValue = (format: Format, value: unknown): string => {
 };
 
 export const toScreenerMenu = () => ({
+    groups: FILTER_GROUPS.map((g) => ({
+        ...g,
+        filters: FILTERS.filter((f) => f.group === g.id).map(({ id, label, options}) => ({ id, label, options: options.map(({ value, label }) => ({ value, label })) })),
+    })),
+    signals: SIGNALS.map(({ id, label }) => ({ id, label })),
     views: Object.entries(VIEWS).map(([id, v]) => ({ id, label: v.label })),
 });
 export type ScreenerMenu = ReturnType<typeof toScreenerMenu>;

@@ -180,8 +180,8 @@ On performance, we made code changes in line with the following considerations:
 ### Screener
 
 Our screener is a separate tab in our application, just like 'search' and 'watchlist'. As a whole, we implemented it in two parts:
-- **Browse**. The 'landing page' of our screener tab is a list of stocks the user can browse. It consists of a selection of stocks from the ones we allow users to screen from.
-- **Screener/Filter**.
+- **Browse**. Our screener tab starts with a list of stocks the user can browse. It consists of a pulled selection of stocks we allow users to screen from. To build this part required wiring the backend with queries on stock profiles, metrics, and quotes, so this was the section where most of the data work was implemented.
+- **Screener/Filter**. Enables users to screen and filter the data we already collected from the browse part.
 
 #### Browse Architecture
 
@@ -236,3 +236,13 @@ All of our main browse or screener-related files which we added when building th
     - `components/screener/ScreenerTable.tsx`
     - `components/screener/ScreenerPagination.tsx`
   - `screener/page.tsx` receives the URL's search params (passing them to `query.ts`) and pulls the screener controls, table, and pagination components from the `components/screener` directory
+
+### Screener Architecture
+
+Building out browse delivered the core backend functionality for our screening. Nothing in the pipeline, table, paging, or repository changes; we simply added a new file for the filtering, and four other files which read the screened data.
+
+![readme/screener-arch.png](readme/screener-arch.png)
+
+Overall, in the front end, the filters panel `ScreenerControls.tsx` (as rendered by `screener/page.tsx`) lets users choose from all the filters and signals defined in `filters.ts`. When a user changes a filter, the panel writes the new choices into the URL such that the page is re-rendered. 
+
+In the backend, the page then calls `query.ts` to parse and validate the URL against `filters.ts`, turning it into MongoDB conditions which get passed to `repository.ts`. The latter runs a single aggregation that filters, sorts and pages the stocks. Finally, `ScreenerPage` from `screener/page.tsx` passes the results to the screener table and pagination, which render the updated screen.
