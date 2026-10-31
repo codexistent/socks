@@ -4,7 +4,7 @@ import {ObjectId} from "mongodb";
 
 const getSecret = () => {
     const secret = process.env.BETTER_AUTH_SECRET;
-    if(!secret) throw new Error('BETTR_AUTH_SECRET must be set');
+    if(!secret) throw new Error('BETTER_AUTH_URL must be set');
     return secret;
 };
 

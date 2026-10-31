@@ -73,7 +73,7 @@ const WatchlistButton = ({
     }
 
     return (
-        <button className={`watchlist-btn ${added ? "watchlist-remove" : ""}`} onClick={handleClick}>
+        <button type="button" disabled={isPending} className={`watchlist-btn ${added ? "watchlist-remove" : ""}`} onClick={handleClick}>
             {showTrashIcon && added ? (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
