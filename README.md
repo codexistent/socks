@@ -163,7 +163,7 @@ Info on watchlist stocks are currently stored in a single MongoDB collection acr
 
 Our focus in this upgrade was twofold: firstly, adding stock screening capabilities and secondly, improving speed/performance. Finally, we also made some minor patches. 
 
-For Version 2, I used Claude Code to discuss high-level architecture options for performance (i.e. perceived speed, optimization techniques) or for the screener (e.g. where filtering should happen and how to cache Finnhub responses), with the implementation and final decisions were made on my own.
+For Version 2, I used Claude Code to discuss high-level architecture options on performance (i.e. perceived speed, optimization techniques) or screener (e.g. where filtering should happen and how to cache Finnhub responses), with the implementation and final decisions made on my own.
 
 ### Performance
 
@@ -213,18 +213,26 @@ All of our main browse or screener-related files which we added when building th
 - Protocols on data we pull for the stocks
   - `database/models/stock-snapshot.model.ts` outlines the MongoDB document per stock
 - Background data syncing
-  - `lib/screener/finnhub.ts` calls FinnHub
-  - `lib/screener/sync.ts` converts Finnhub data to our fields and saves it
-  - `lib/inngest/screener.ts` schedules the syncs and throttles them
-  - `app/api/inngest.route.ts` registers those jobs with Inngest
-  - `scripts/screener.preview.ts` checks the current mappings against live data
+  - Files
+    - `lib/screener/finnhub.ts`
+    - `lib/screener/sync.ts`
+    - `lib/inngest/screener.ts`
+    - `app/api/inngest.route.ts`
+    - `scripts/screener.preview.ts`
+  - We call Finnhub via `finnhub.ts`, which passes the data to `sync.ts` to convert then to fields and save it.
+  - `screener.ts` schedules the syncs and throttles them and `inngest.route.ts` registers those jobs with Inngest
+  - `screener.preview.ts` checks the current mappings against live data
 - Page logic
-  - `lib/screener/catalog.ts` defines the columns and views
-  - `lib/screener/state.ts` reads and writes the URL (since that is where our FinnHub requests go)
-  - `lib/screener/query.ts` validates the URL and builds the query
-  - `lib/screener/repository.ts` runs the database query
+  - Files
+    - `lib/screener/catalog.ts`
+    - `lib/screener/state.ts` 
+    - `lib/screener/query.ts`
+    - `lib/screener/repository.ts`
+  - `query.ts` receives the URL's search params from `screener/page.tsx`, parsing and validating them into a `ScreenerState`. Then, `repository.ts` uses `toMnogo` and `effectiveSort` from `query.ts` to run the database query. The table renders the results, and its links come from `hrefWith` in `state.ts`.
 - UI
-  - `app/(root)/screener/page.tsx`
-  - `components/screener/ScreenerControls.tsx` are the controls for search and viewing tabs
-  - `components/screener/ScreenerTable.tsx` is a table holding sortable results
-  - `components/screener/ScreenerPagination.tsx`
+  - Files:
+    - `app/(root)/screener/page.tsx`
+    - `components/screener/ScreenerControls.tsx`
+    - `components/screener/ScreenerTable.tsx`
+    - `components/screener/ScreenerPagination.tsx`
+  - `screener/page.tsx` receives the URL's search params (passing them to `query.ts`) and pulls the screener controls, table, and pagination components from the `components/screener` directory
