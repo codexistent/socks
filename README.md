@@ -163,7 +163,7 @@ Info on watchlist stocks are currently stored in a single MongoDB collection acr
 
 Our focus in this upgrade was twofold: firstly, adding stock screening capabilities and secondly, improving speed/performance. Finally, we also made some minor patches. 
 
-For Version 2, I used Claude Code to discuss high-level architecture options for performance (i.e. perceived speed, optimization techniques) or for the screener (e.g. where filtering should happen and how to cache Finnhub responses), with the implementation and final decisions were made on my own.
+For Version 2, I used Claude Code to discuss high-level architecture options on performance (i.e. perceived speed, optimization techniques) or screener (e.g. where filtering should happen and how to cache Finnhub responses), with the implementation and final decisions made on my own.
 
 ### Performance
 
@@ -176,3 +176,63 @@ On performance, we made code changes in line with the following considerations:
     - After: ![readme/before.png](readme/before.png)
 - Individual stock pages may possibly be slowed by the loading of their watchlist buttons (since pages are always as slow as their slowest synchronous component). To mitigate this, we can simply bring out the watchlist button to its own async component, `StockWatchlistButton`, and load it into `StockDetails`.
 - For the `useTradingViewWidget.tsx`, we implemented lazy loading so charts load once they scroll into view, instead of slowing down the entire page as soon as the user lands on it
+
+### Screener
+
+Our screener is a separate tab in our application, just like 'search' and 'watchlist'. As a whole, we implemented it in two parts:
+- **Browse**. The 'landing page' of our screener tab is a list of stocks the user can browse. It consists of a selection of stocks from the ones we allow users to screen from.
+- **Screener/Filter**.
+
+#### Browse Architecture
+
+The architecture consists of a read-based model which is filled asynchronously in the background:
+
+![readme/browse-arch.png](readme/browse-arch.png)
+
+Several considerations were made when designing the architecture:
+- Separating reading from writing
+  - Prevents either from delaying the other
+- Batching for requests
+  - We have 3 types of requests (stock prices, stock profiles, metrics) x 500 stocks = 1,500 requests total
+  - The scheduler splits our FinnHub data requests into batches of size 10; the worker sends out at most 4 batches/min
+  - This helps with
+    - Staying within FinnHub and Inngest rate limits
+      - FinnHub has a limit of 60 requests per min
+      - Inngest has a limit of 4 batches per min
+    - Small batches = only need to redo a smaller portion of the work if one request fails
+
+#### Browse File Structure
+
+All of our main browse or screener-related files which we added when building the browse functionality were part of one of five groups.
+- Pulling the universe of stocks
+  - Files:
+    - `scripts/update-sp500.mjs`
+    - `data/sp500.json`
+    - `lib/screener/universe.ts`
+  - For the workflow, `update-sp500.mjs` downloads the S&P 500 list to `sp500.json`, and `universe.ts` exposes this list to our app
+- Protocols on data we pull for the stocks
+  - `database/models/stock-snapshot.model.ts` outlines the MongoDB document per stock
+- Background data syncing
+  - Files
+    - `lib/screener/finnhub.ts`
+    - `lib/screener/sync.ts`
+    - `lib/inngest/screener.ts`
+    - `app/api/inngest.route.ts`
+    - `scripts/screener.preview.ts`
+  - We call Finnhub via `finnhub.ts`, which passes the data to `sync.ts` to convert then to fields and save it.
+  - `screener.ts` schedules the syncs and throttles them and `inngest.route.ts` registers those jobs with Inngest
+  - `screener.preview.ts` checks the current mappings against live data
+- Page logic
+  - Files
+    - `lib/screener/catalog.ts`
+    - `lib/screener/state.ts` 
+    - `lib/screener/query.ts`
+    - `lib/screener/repository.ts`
+  - `query.ts` receives the URL's search params from `screener/page.tsx`, parsing and validating them into a `ScreenerState`. Then, `repository.ts` uses `toMnogo` and `effectiveSort` from `query.ts` to run the database query. The table renders the results, and its links come from `hrefWith` in `state.ts`.
+- UI
+  - Files:
+    - `app/(root)/screener/page.tsx`
+    - `components/screener/ScreenerControls.tsx`
+    - `components/screener/ScreenerTable.tsx`
+    - `components/screener/ScreenerPagination.tsx`
+  - `screener/page.tsx` receives the URL's search params (passing them to `query.ts`) and pulls the screener controls, table, and pagination components from the `components/screener` directory

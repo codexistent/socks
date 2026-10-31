@@ -1,5 +1,8 @@
-// Removes Better Auth `account` and `session` documents whose user was deleted.
-// Run from the project root:  node scripts/cleanup-orphans.mjs
+/**
+ * Purpose: Removes Better Auth `account` and `session` documents whose user was deleted.
+ *      node scripts/cleanup-orphans.mjs
+ */
+
 import 'dotenv/config';
 import mongoose from 'mongoose';
 
