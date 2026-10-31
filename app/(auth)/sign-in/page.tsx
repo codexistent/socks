@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form";
 import InputField from "@/components/forms/InputField";
 import {Button} from "@base-ui/react";
 import FooterLink from "@/components/forms/FooterLink";
-import {signInWithEmail, signUpWithEmail} from "@/lib/actions/auth.actions";
+import {signInWithEmail} from "@/lib/actions/auth.actions";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import GoogleButton from "@/components/forms/GoogleButton";
@@ -39,6 +39,7 @@ const SignIn = () => {
         try {
             const result = await signInWithEmail(data);
             if(result.success) router.push('/');
+            else toast.error('Sign in failed', { description: result.error });
         } catch (e) {
             console.error(e);
             toast.error('Sign in failed', {
@@ -67,7 +68,7 @@ const SignIn = () => {
                     placeholder="socks@socks.socks"
                     register={register}
                     error={errors.email}
-                    validation={{required:'Email is required', pattern: { value: /^\w+(\.\w+)*@\w+(\.\w+)+$/, message: 'Enter a valid email address'} } }
+                    validation={{required:'Email is required', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address'} } }
                 />
 
                 <InputField
